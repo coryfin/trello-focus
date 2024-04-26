@@ -1,0 +1,35 @@
+#show-all-lists {
+    margin: 0 4px 4px 0;
+}
+
+/* Default styles */
+
+/* Hide "Show all lists" button */
+.board-wrapper:not(.focus-mode-on) #show-all-lists {
+    display: none;
+}
+
+/* Focus mode styles */
+
+/* Center layout */
+.board-wrapper.focus-mode-on #board {
+    justify-content: center;
+}
+.board-wrapper.focus-mode-on [data-testid="list-composer-button-container"] {
+    flex-grow: 0;
+}
+
+/* Hide other lists */
+.board-wrapper.focus-mode-on [data-testid="list-wrapper"]:not(.focus-mode-focused) {
+    display: none;
+}
+
+/* Hide "Focus" button */
+.board-wrapper.focus-mode-on [data-testid="focus-button"] {
+    display: none;
+}
+
+/* Hide list composer button */
+.board-wrapper.focus-mode-on [data-testid="list-composer-button"] {
+    display: none;
+}
