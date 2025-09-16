@@ -15,8 +15,10 @@
 .board-wrapper.focus-mode-on #board {
     justify-content: center;
 }
-.board-wrapper.focus-mode-on [data-testid="list-composer-button-container"] {
-    flex-grow: 0;
+
+/* Hide list composer button container */
+.board-wrapper.focus-mode-on li:has([data-testid="list-composer-button-container"]) {
+    display: none;
 }
 
 /* Hide other lists */
