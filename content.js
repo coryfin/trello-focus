@@ -20,18 +20,15 @@ function waitForElement(selector) {
   });
 }
 
-function onListWrapperInserted(callback) {
+function onListsInserted(callback) {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (!mutation.addedNodes?.length) {
         return;
       }
       mutation.addedNodes.forEach((addedNode) => {
-        if (
-          addedNode instanceof Element &&
-          addedNode.getAttribute("data-testid") === "list-wrapper"
-        ) {
-          callback(addedNode);
+        if (addedNode instanceof Element && addedNode.getAttribute("data-testid") === "lists") {
+          callback(addedNode.children);
         }
       });
     });
@@ -64,22 +61,24 @@ waitForElement(".board-header-btns").then((boardHeaderButtons) => {
   insertShowAllButton(boardHeaderButtons);
 });
 
-onListWrapperInserted((listWrapper) => {
-  insertFocusButton(listWrapper);
+onListsInserted(listWrappers => {
+  for (const listWrapper of listWrappers) {
+    insertFocusButton(listWrapper);
 
-  const listId = listWrapper.getAttribute("data-list-id");
+    const listId = listWrapper.getAttribute("data-list-id");
 
-  chrome.storage.local.get("focusedList").then((result) => {
-    if (result.focusedList === listId) {
-      listWrapper.classList.add("focus-mode-focused");
-    }
-  });
+    chrome.storage.local.get("focusedList").then((result) => {
+      if (result.focusedList === listId) {
+        listWrapper.classList.add("focus-mode-focused");
+      }
+    });
 
-  chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (changes.focusedList?.newValue === listId) {
-      listWrapper.classList.add("focus-mode-focused");
-    }
-  });
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (changes.focusedList?.newValue === listId) {
+        listWrapper.classList.add("focus-mode-focused");
+      }
+    });
+  }
 });
 
 // Unmark the focused list whenever focus mode is removed
