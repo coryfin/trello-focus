@@ -57,8 +57,8 @@ waitForElement(".board-wrapper").then((boardMainContent) => {
   });
 });
 
-waitForElement(".board-header-btns").then((boardHeaderButtons) => {
-  insertShowAllButton(boardHeaderButtons);
+waitForElement('span:has(> [data-testid="filter-popover-button"])').then((filterPopoverButton) => {
+  insertShowAllButton(filterPopoverButton);
 });
 
 onListsInserted(listWrappers => {
@@ -99,6 +99,11 @@ function insertFocusButton(listWrapper) {
     '[data-testid="list-edit-menu-button"]'
   );
 
+  if (!listEditMenuButton) {
+    console.warn("List edit menu button not found for list wrapper:", listWrapper);
+    return;
+  }
+
   const focusButton = document.createElement("button");
   focusButton.className = listEditMenuButton.className;
   focusButton.setAttribute("data-testid", "focus-button");
@@ -116,7 +121,7 @@ function insertFocusButton(listWrapper) {
   });
 }
 
-function insertShowAllButton(boardHeaderButtons) {
+function insertShowAllButton(filterPopoverButton) {
   const filtersButton = document.querySelector(
     '[data-testid="filter-popover-button"]'
   );
@@ -125,7 +130,7 @@ function insertShowAllButton(boardHeaderButtons) {
   showAllButton.id = "show-all-lists";
   showAllButton.textContent = "Show all lists";
   showAllButton.className = filtersButton.className;
-  boardHeaderButtons.insertAdjacentElement("afterbegin", showAllButton);
+  filterPopoverButton.insertAdjacentElement("beforebegin", showAllButton);
 
   showAllButton.addEventListener("click", () => {
     chrome.storage.local.remove("focusedList");
